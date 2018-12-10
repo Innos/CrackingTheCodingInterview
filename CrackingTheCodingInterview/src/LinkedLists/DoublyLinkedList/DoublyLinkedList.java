@@ -60,6 +60,19 @@ public class DoublyLinkedList<T> {
         }
     }
 
+    public void delete(Node<T> nodeToDelete){
+        if(nodeToDelete == this.start && nodeToDelete == this.end){
+            this.start = null;
+            this.end = null;
+        } else if(nodeToDelete == this.start){
+            this.start = this.start.getNext();
+        } else if(nodeToDelete == this.end){
+            this.end = this.end.getPrevious();
+        } else{
+            nodeToDelete.getPrevious().setNext(nodeToDelete.getNext());
+        }
+    }
+
     public int length(){
         return this.length;
     }
