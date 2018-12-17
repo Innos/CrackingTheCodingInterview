@@ -23,6 +23,7 @@ public class FindLCAWithoutKeepingNodesInCollections {
         // 4  1 6   9
         //  \      / \
         //   2    8  10
+
         BinaryTree<Integer> tree = new BinaryTree<>();
         tree.add(5);
         TreeNode<Integer> root = tree.getRoot();
