@@ -71,8 +71,8 @@ public class PrintAllPathsThatSumToN {
 
         if(leftPaths != null && rightPaths != null){
             HashMap<Integer, List<Path>> pathsBySum = new HashMap<>();
-            List<Path> extendedLeftPaths = extendPaths(leftPaths, node.getValue());
-            for (Path extendedLeftPath : extendedLeftPaths) {
+            extendPaths(leftPaths, node.getValue());
+            for (Path extendedLeftPath : leftPaths) {
                 paths.add(extendedLeftPath);
                 if(!pathsBySum.containsKey(extendedLeftPath.sum)){
                     pathsBySum.put(extendedLeftPath.sum, new ArrayList<>());
@@ -85,45 +85,45 @@ public class PrintAllPathsThatSumToN {
                 int compliment = targetSum - rightPath.sum;
                 if(pathsBySum.containsKey(compliment)){
                     for (Path leftPath : pathsBySum.get(compliment)) {
-                        System.out.println(createMergedPath(leftPath, rightPath).nodes);
+                        printJoinedPaths(leftPath,rightPath);
                     }
                 }
             }
 
-            paths.addAll(extendPaths(rightPaths, node.getValue()));
+            extendPaths(rightPaths, node.getValue());
+            paths.addAll(rightPaths);
         } else if(leftPaths != null || rightPaths != null){
-            paths.addAll(extendPaths(leftPaths != null ? leftPaths : rightPaths, node.getValue()));
+            extendPaths(leftPaths != null ? leftPaths : rightPaths, node.getValue());
+            paths.addAll(leftPaths != null ? leftPaths : rightPaths);
         }
 
         return paths;
     }
 
-    private static List<Path> extendPaths(List<Path> partialPaths, int nodeValue){
-        List<Path> newPaths = new ArrayList<>();
+    private static void extendPaths(List<Path> partialPaths, int nodeValue){
         for (Path partialPath : partialPaths) {
-            List<Integer> pathNodes = new ArrayList<>(partialPath.nodes);
-            pathNodes.add(nodeValue);
             int newSum = partialPath.sum + nodeValue;
             if(newSum == targetSum){
-                System.out.println(pathNodes);
+                System.out.println(partialPath.nodes);
             }
-            newPaths.add(new Path(newSum, pathNodes));
-        }
 
-        return newPaths;
+            partialPath.sum = newSum;
+            partialPath.nodes.add(nodeValue);
+        }
     }
 
-    private static Path createMergedPath(Path leftPath, Path rightPath){
-        int newSum = leftPath.sum + rightPath.sum;
-        List<Integer> pathNodes = new ArrayList<>(leftPath.nodes);
+    private static void printJoinedPaths(Path leftPath, Path rightPath){
+        StringBuilder sb = new StringBuilder();
+        sb.append(leftPath.nodes.toString());
+        sb.delete(sb.length() - 1, sb.length());
 
         // add rightPath nodes reversed
         for (int i = rightPath.nodes.size() - 1; i >= 0; i--) {
-            pathNodes.add(rightPath.nodes.get(i));
+            sb.append(", ");
+            sb.append(rightPath.nodes.get(i));
         }
 
-        //pathNodes.addAll(rightPath.nodes);
-        return new Path(newSum, pathNodes);
+        sb.append(']');
+        System.out.println(sb.toString());
     }
-
 }
